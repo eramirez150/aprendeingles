@@ -1,0 +1,7 @@
+[
+  { "english": "apple", "spanish": "manzana", "category": "food", "learned": false, "difficulty": 0 },
+  { "english": "run", "spanish": "correr", "category": "verb", "learned": false, "difficulty": 0 },
+  { "english": "happy", "spanish": "feliz", "category": "adjective", "learned": false, "difficulty": 0 },
+  { "english": "bread", "spanish": "pan", "category": "food", "learned": false, "difficulty": 0 },
+  { "english": "jump", "spanish": "saltar", "category": "verb", "learned": false, "difficulty": 0 }
+]
