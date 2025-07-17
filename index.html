@@ -8,9 +8,13 @@
   <link rel="stylesheet" href="css/dark-mode.css">
 </head>
 <body>
-  <header>
-    <h1>Aprende Inglés</h1>
-    <button id="toggle-dark-mode">🌙 Modo Oscuro</button>
+  <header style="display:flex;align-items:center;gap:16px;">
+    <!-- Si la imagen está en la raíz -->
+    <!-- <img src="./bot-icon.png" alt="Bot Icon" id="bot-icon" style="height:48px;width:48px;display:inline-block;"> -->
+    <!-- Si la imagen está en la carpeta img -->
+    <img src="bot-icon.png" alt="Bot Icon" id="bot-icon">
+    <h1 style="margin:0;">Aprende Inglés</h1>
+    <button id="toggle-dark-mode" style="margin-left:auto;">🌙 Modo Oscuro</button>
   </header>
   <main>
     <section id="progress">
@@ -35,9 +39,9 @@
         <h2>Quiz</h2>
         <p id="quiz-question">Selecciona la traducción correcta</p>
         <div id="quiz-options" class="quiz-options-container">
-<button id="submit-quiz">Enviar Respuesta</button>
-    
+          <!-- Las opciones se agregarán dinámicamente aquí -->
         </div>
+        <button id="submit-quiz">Enviar Respuesta</button>
       </section>
     <section id="stats">
       <h2>Estadísticas</h2>
