@@ -48,21 +48,74 @@ const WordsManager = {
     const index = this.words.findIndex(w => w.english === word.english);
     if (index !== -1) {
       this.words[index].learned = learned;
-      this.words[index].difficulty = difficult ? this.words[index].difficulty + 1 : 0;
+      this.words[index].difficulty = difficult ? 1 : 0;
       this.saveProgress();
+      
+      // Emitir evento de cambio
+      const event = new CustomEvent('wordStatusChanged', { 
+        detail: { word: this.words[index], learned, difficult } 
+      });
+      document.dispatchEvent(event);
     }
   },
 
   saveProgress: function() {
-    const progress = this.words.reduce((acc, word) => ({
-      ...acc,
-      [word.english]: { learned: word.learned, difficulty: word.difficulty }
-    }), {});
-    localStorage.setItem('wordsProgress', JSON.stringify(progress));
+    try {
+      localStorage.setItem('wordsProgress', JSON.stringify(this.words));
+    } catch (e) {
+      console.error('Error guardando progreso:', e);
+    }
   },
 
   getProgress: function() {
     const learned = this.words.filter(word => word.learned).length;
     return { learned, total: this.words.length };
+  },
+
+  // Nuevos métodos para vincular con GameLogic
+  markWordQuiz(word, learned, isQuiz = false) {
+    if (!word) return;
+    const foundWord = this.words.find(w => w.english === word.english);
+    if (foundWord) {
+      foundWord.learned = learned;
+      
+      // Añadir puntos según la acción
+      if (learned) {
+        GameLogic.addPoints(isQuiz ? 10 : 5, 
+            isQuiz ? "¡Respuesta correcta!" : "Palabra aprendida");
+        GameLogic.updateStreak(true);
+      } else {
+        GameLogic.updateStreak(false);
+      }
+
+      // Registrar palabra reciente
+      GameLogic.addRecentWord(word);
+      
+      // Actualizar progreso
+      this.updateProgress();
+      // If you have a saveToLocalStorage method, call it here. Otherwise, use saveProgress.
+      if (typeof this.saveToLocalStorage === "function") {
+        this.saveToLocalStorage();
+      } else {
+        this.saveProgress();
+      }
+    }
+  },
+
+  updateProgress() {
+    const progress = this.getProgress();
+    document.getElementById('progress-text').textContent = 
+        `${progress.learned}/${progress.total} palabras`;
+    document.getElementById('progress-bar').style.width = 
+        `${(progress.learned / progress.total) * 100}%`;
+  },
+
+  getQuizWords() {
+    // Priorizar palabras recientes
+    const recentWords = GameLogic.getRecentWords();
+    const otherWords = this.words.filter(w => 
+        !recentWords.find(rw => rw.english === w.english));
+    
+    return [...recentWords, ...otherWords];
   }
 };

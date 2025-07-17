@@ -6,13 +6,8 @@ body {
 }
 
 header {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 h1, h2 {
@@ -93,13 +88,118 @@ button:hover {
   margin: 10px auto;
 }
 
-#bot-icon {
-  width: 48px;
-  height: 48px;
-  display: block;
-  object-fit: contain;
-  margin-right: 1rem;
-  z-index: 1;
+.quiz-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.quiz-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.word-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.word-label {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.current-word {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    color: #333;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.option-button {
+    padding: 20px;
+    font-size: 1.2rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-button:hover {
+    transform: translateY(-2px);
+    border-color: #2196F3;
+}
+
+.option-button.correct {
+    background: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+    animation: pulse 0.5s;
+}
+
+.option-button.incorrect {
+    background: #f44336;
+    color: white;
+    border-color: #f44336;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #333;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.success-action {
+    background: #4CAF50 !important;
+    color: white !important;
+}
+
+.error-action {
+    background: #f44336 !important;
+    color: white !important;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.animate-success {
+    animation: bounce 0.5s ease;
 }
 
 @media (max-width: 600px) {
@@ -116,4 +216,14 @@ button:hover {
     width: 100%;
     max-width: 200px;
   }
+}
+
+@media (max-width: 480px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .current-word {
+        font-size: 2rem;
+    }
 }

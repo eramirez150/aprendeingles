@@ -50,5 +50,9 @@
   { "english": "night", "spanish": "noche", "category": "time", "learned": false, "difficulty": 0 },
   { "english": "today", "spanish": "hoy", "category": "time", "learned": false, "difficulty": 0 },
   { "english": "tomorrow", "spanish": "mañana", "category": "time", "learned": false, "difficulty": 0 },
-  { "english": "year", "spanish": "año", "category": "time", "learned": false, "difficulty": 0 }
+  { "english": "year", "spanish": "año", "category": "time", "learned": false, "difficulty": 0 },
+
+  { "english": "hour", "spanish": "hora", "category": "time", "learned": false, "difficulty": 0 },
+  { "english": "minute", "spanish": "minuto", "category": "time", "learned": false, "difficulty": 0 },
+  { "english": "second", "spanish": "segundo", "category": "time", "learned": false, "difficulty": 0 }
 ]

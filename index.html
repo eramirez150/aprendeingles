@@ -6,6 +6,7 @@
   <title>Herramienta de Aprendizaje de Inglés</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/dark-mode.css">
+  
 </head>
 <body>
   <header style="display:flex;align-items:center;gap:16px;">
@@ -35,14 +36,22 @@
       <button id="mark-difficult">Marcar como Difícil</button>
       <button id="next-card">Siguiente</button>
     </section>
-    <section id="quiz">
+    <section id="quiz" class="quiz-section">
         <h2>Quiz</h2>
-        <p id="quiz-question">Selecciona la traducción correcta</p>
-        <div id="quiz-options" class="quiz-options-container">
-          <!-- Las opciones se agregarán dinámicamente aquí -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <span class="score">Puntos: <span id="quiz-score">0</span></span>
+                <span class="streak">🔥 <span id="quiz-streak">0</span></span>
+            </div>
+            <div class="word-container">
+                <span class="word-label">Traduce al inglés:</span>
+                <h3 class="current-word">casa</h3>
+            </div>
+            <div class="options-grid">
+                <!-- Las opciones se generarán dinámicamente -->
+            </div>
         </div>
-        <button id="submit-quiz">Enviar Respuesta</button>
-      </section>
+    </section>
     <section id="stats">
       <h2>Estadísticas</h2>
       <p>Puntos: <span id="points">0</span></p>
@@ -53,5 +62,6 @@
   <script src="js/wordsManager.js"></script>
   <script src="js/gameLogic.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/quizManager.js"></script>
 </body>
 </html>

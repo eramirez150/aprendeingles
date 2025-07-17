@@ -1,42 +1,53 @@
-const GameLogic = {
-  points: parseInt(localStorage.getItem('points')) || 0,
-  streak: parseInt(localStorage.getItem('streak')) || 0,
-  lastVisit: localStorage.getItem('lastVisit') || null,
+class GameLogic {
+    static points = 0;
+    static streak = 0;
+    static recentWords = [];
 
-  addPoints: function(amount) {
-    this.points += amount;
-    localStorage.setItem('points', this.points);
-    this.updateStats();
-  },
-
-  getPoints: function() {
-    return this.points;
-  },
-
-  getLevel: function() {
-    return Math.floor(this.points / 100) + 1;
-  },
-
-  getStreak: function() {
-    const today = new Date().toDateString();
-    if (this.lastVisit !== today) {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      if (this.lastVisit === yesterday.toDateString()) {
-        this.streak++;
-      } else {
-        this.streak = 1;
-      }
-      this.lastVisit = today;
-      localStorage.setItem('lastVisit', today);
-      localStorage.setItem('streak', this.streak);
+    static addPoints(amount, reason) {
+        this.points += amount;
+        this.showToast(`+${amount} puntos - ${reason}`);
+        this.updateStats();
     }
-    return this.streak;
-  },
 
-  updateStats: function() {
-    document.getElementById('points').textContent = this.points;
-    document.getElementById('level').textContent = this.getLevel();
-    document.getElementById('streak').textContent = `${this.streak} días`;
-  }
-};
+    static updateStreak(correct) {
+        if (correct) {
+            this.streak++;
+            if (this.streak % 5 === 0) {
+                this.showToast(`¡Racha de ${this.streak}! 🔥`);
+            }
+        } else {
+            this.streak = 0;
+        }
+        this.updateStats();
+    }
+
+    static showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }, 100);
+    }
+
+    static updateStats() {
+        document.getElementById('points').textContent = this.points;
+        document.getElementById('streak').textContent = `${this.streak} días`;
+        document.getElementById('level').textContent = Math.floor(this.points / 100) + 1;
+    }
+
+    static addRecentWord(word) {
+        this.recentWords.unshift(word);
+        if (this.recentWords.length > 10) this.recentWords.pop();
+    }
+
+    static getRecentWords() {
+        return this.recentWords;
+    }
+}

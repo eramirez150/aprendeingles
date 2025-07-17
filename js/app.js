@@ -1,42 +1,52 @@
 let currentWord = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    await WordsManager.loadWords();
-    currentWord = WordsManager.getRandomWord();
-    updateUI();
-    
-    // Event listeners
-    document.getElementById('flashcard-container').addEventListener('click', flipCard);
-    document.getElementById('mark-learned').addEventListener('click', () => {
-      WordsManager.markWord(currentWord, true);
-      nextCard();
-    });
-    document.getElementById('mark-difficult').addEventListener('click', () => {
-      WordsManager.markWord(currentWord, false, true);
-      nextCard();
-    });
-    document.getElementById('next-card').addEventListener('click', nextCard);
-    document.getElementById('toggle-dark-mode').addEventListener('click', toggleDarkMode);
-    document.getElementById('submit-quiz').addEventListener('click', submitQuizAnswer);
-    
-    updateFlashcard();
-    showQuizOptions(); // Mostrar opciones al cargar
-  } catch (error) {
-    console.error("Error inicializando la app:", error);
-    document.getElementById('flashcard').querySelector('.front').textContent = 'Error cargando la aplicación';
-  }
+    try {
+        await WordsManager.loadWords();
+        currentWord = WordsManager.getRandomWord();
+        
+        // Event listeners
+        document.getElementById('flashcard-container').addEventListener('click', flipCard);
+        document.getElementById('mark-learned').addEventListener('click', () => {
+            WordsManager.markWord(currentWord, true);
+            // Actualizar puntuación del quiz si existe
+            const quizManager = window.quizManager;
+            if (quizManager) {
+                quizManager.score += 5;
+                quizManager.updateUI();
+            }
+            nextCard();
+        });
+        document.getElementById('mark-difficult').addEventListener('click', () => {
+            WordsManager.markWord(currentWord, false, true);
+            nextCard();
+        });
+        document.getElementById('next-card').addEventListener('click', nextCard);
+        document.getElementById('toggle-dark-mode').addEventListener('click', toggleDarkMode);
+        document.getElementById('submit-quiz').addEventListener('click', submitQuizAnswer);
+        
+        updateUI();
+        updateFlashcard();
+        
+        // Inicializar QuizManager después de cargar las palabras
+        window.quizManager = new QuizManager();
+    } catch (error) {
+        console.error("Error inicializando la app:", error);
+        document.querySelector('.front').textContent = 'Error cargando la aplicación';
+    }
 });
 
 function flipCard() {
-  document.getElementById('flashcard').classList.toggle('flipped');
+    document.getElementById('flashcard').classList.toggle('flipped');
+    // Añadir puntos por interacción
+    GameLogic.addPoints(1, "¡Practicando!");
 }
 
 function nextCard() {
-  currentWord = WordsManager.getRandomWord();
-  updateFlashcard();
-  updateUI();
-  showQuizOptions(); // Mostrar nuevas opciones en el quiz
+    currentWord = WordsManager.getRandomWord();
+    updateFlashcard();
+    updateUI();
+    GameLogic.addRecentWord(currentWord);
 }
 
 function updateFlashcard() {
@@ -65,58 +75,26 @@ function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
 }
 
-// Muestra opciones de respuesta en el quiz
-function showQuizOptions() {
-  const quizOptionsDiv = document.getElementById('quiz-options');
-  quizOptionsDiv.innerHTML = ''; // Limpiar opciones anteriores
-
-  if (!currentWord) return;
-
-  // Generar opciones (una correcta y dos incorrectas)
-  const words = WordsManager.getAllWords ? WordsManager.getAllWords() : [];
-  let options = [currentWord.spanish];
-
-  // Agrega dos opciones incorrectas aleatorias
-  while (options.length < 3 && words.length > 2) {
-    const random = words[Math.floor(Math.random() * words.length)];
-    if (random.spanish !== currentWord.spanish && !options.includes(random.spanish)) {
-      options.push(random.spanish);
-    }
-  }
-
-  // Mezclar opciones
-  options = options.sort(() => Math.random() - 0.5);
-
-  // Crear radio buttons
-  options.forEach((option, idx) => {
-    const label = document.createElement('label');
-    label.style.display = 'block';
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.name = 'quiz-option';
-    input.value = option;
-    if (idx === 0) input.checked = true; // Selecciona la primera por defecto
-    label.appendChild(input);
-    label.appendChild(document.createTextNode(option));
-    quizOptionsDiv.appendChild(label);
-  });
-}
-
 function submitQuizAnswer() {
+  // Busca la opción seleccionada (asumiendo que son radio buttons con name="quiz-option")
   const selected = document.querySelector('input[name="quiz-option"]:checked');
   if (!selected) {
     alert('Por favor selecciona una respuesta.');
     return;
   }
   const answer = selected.value;
+  // Aquí puedes agregar la lógica para verificar la respuesta
+  // Por ejemplo:
   if (answer === currentWord.spanish) {
     alert('¡Correcto!');
+    // Actualiza puntos, etc.
     if (typeof GameLogic !== 'undefined') {
-      GameLogic.addPoint && GameLogic.addPoint();
+      GameLogic.addPoint();
       updateUI();
     }
   } else {
     alert('Incorrecto. La respuesta correcta es: ' + currentWord.spanish);
   }
-  nextCard(); // Muestra una nueva palabra y opciones
+  // Puedes cargar una nueva pregunta si lo deseas
+  nextCard();
 }
