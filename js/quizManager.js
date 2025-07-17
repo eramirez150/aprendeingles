@@ -1,7 +1,5 @@
 class QuizManager {
     constructor() {
-        this.score = 0;
-        this.streak = 0;
         this.currentWord = null;
         this.initialize();
     }
@@ -60,20 +58,18 @@ class QuizManager {
         
         if (isCorrect) {
             selectedButton.classList.add('correct');
-            this.score += 10 * (this.streak + 1);
-            this.streak++;
-            // Marcar como aprendida en WordsManager
+            // Usar GameLogic para los puntos
+            GameLogic.addPoints(10, "¡Respuesta correcta!");
+            GameLogic.updateStreak(true);
             WordsManager.markWord(this.currentWord, true);
         } else {
             selectedButton.classList.add('incorrect');
             document.querySelector(`[data-value="${this.currentWord.english}"]`)
                 .classList.add('correct');
-            this.streak = 0;
-            // Marcar como difícil en WordsManager
-            WordsManager.markWord(this.currentWord, false, true);
+            GameLogic.updateStreak(false);
         }
         
-        // Actualizar UI y progreso
+        // Actualizar UI directamente
         this.updateUI();
         this.updateProgress();
         
@@ -81,17 +77,32 @@ class QuizManager {
     }
 
     updateUI() {
-        document.getElementById('quiz-score').textContent = this.score;
-        document.getElementById('quiz-streak').textContent = this.streak;
+        try {
+            const quizScore = document.getElementById('quiz-score');
+            const quizStreak = document.getElementById('quiz-streak');
+            
+            if (quizScore) quizScore.textContent = GameLogic.points;
+            if (quizStreak) quizStreak.textContent = GameLogic.streak;
+        } catch (error) {
+            console.error('Error actualizando UI:', error);
+        }
     }
 
     updateProgress() {
-        // Actualizar barra de progreso
-        const progress = WordsManager.getProgress();
-        document.getElementById('progress-text').textContent = 
-            `${progress.learned}/${progress.total} palabras`;
-        document.getElementById('progress-bar').style.width = 
-            `${(progress.learned / progress.total) * 100}%`;
+        try {
+            const progress = WordsManager.getProgress();
+            const progressText = document.getElementById('progress-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            if (progressText) {
+                progressText.textContent = `${progress.learned}/${progress.total} palabras`;
+            }
+            if (progressBar) {
+                progressBar.style.width = `${(progress.learned / progress.total) * 100}%`;
+            }
+        } catch (error) {
+            console.error('Error actualizando progreso:', error);
+        }
     }
 }
 

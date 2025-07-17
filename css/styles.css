@@ -6,12 +6,31 @@ body {
 }
 
 header {
-  text-align: center;
-  margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    justify-content: flex-start;
+    position: relative;
+    gap: 12px;
 }
 
 h1, h2 {
   color: #333;
+}
+
+#toggle-dark-mode {
+    position: absolute;
+    right: 20px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.header-icon {
+    height: 32px;
+    width: 32px;
+    margin-right: 12px;
+    vertical-align: middle;
 }
 
 #progress-bar-container {

@@ -37,7 +37,9 @@ class GameLogic {
     }
 
     static updateStats() {
+        // Actualizar todos los elementos que muestran puntos
         document.getElementById('points').textContent = this.points;
+        document.getElementById('quiz-score').textContent = this.points;
         document.getElementById('streak').textContent = `${this.streak} días`;
         document.getElementById('level').textContent = Math.floor(this.points / 100) + 1;
     }
